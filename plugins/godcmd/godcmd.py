@@ -430,11 +430,15 @@ class Godcmd(Plugin):
             reply = Reply()
             if ok:
                 reply.type = ReplyType.INFO
+                e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
             else:
                 reply.type = ReplyType.ERROR
+                if not isadmin:
+                    e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
             reply.content = result
             e_context["reply"] = reply
 
+            # 把这段代码移动到ok分支，以让bot可以继续处理聊天指令
             # e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
         elif not self.isrunning:
             e_context.action = EventAction.BREAK_PASS
