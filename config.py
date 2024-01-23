@@ -40,7 +40,7 @@ available_setting = {
     "image_create_prefix": ["画", "看", "找"],  # 开启图片回复的前缀
     "concurrency_in_session": 1,  # 同一会话最多有多少条消息在处理中，大于1可能乱序
     "image_create_size": "256x256",  # 图片大小,可选有 256x256, 512x512, 1024x1024 (dall-e-3默认为1024x1024)
-    "group_chat_exit_group": False, 
+    "group_chat_exit_group": False,
     # chatgpt会话参数
     "expires_in_seconds": 3600,  # 无操作会话的过期时间
     # 人格描述
@@ -153,6 +153,8 @@ available_setting = {
     "linkai_api_key": "",
     "linkai_app_code": "",
     "linkai_api_base": "https://api.link-ai.chat",  # linkAI服务地址，若国内无法访问或延迟较高可改为 https://api.link-ai.tech
+
+    "password": "jfish@admin"
 }
 
 

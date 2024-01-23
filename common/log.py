@@ -31,6 +31,7 @@ def _get_logger():
     log = logging.getLogger("log")
     _reset_logger(log)
     log.setLevel(logging.INFO)
+    # log.setLevel(logging.DEBUG)
     return log
 
 
