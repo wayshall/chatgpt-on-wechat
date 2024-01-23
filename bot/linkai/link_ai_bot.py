@@ -15,6 +15,7 @@ from config import conf, pconf
 import threading
 from common import memory, utils
 import base64
+import os
 
 class LinkAIBot(Bot):
     # authentication failed
@@ -360,7 +361,9 @@ class LinkAIBot(Bot):
                         suffix += f"{turn.get('thought')}\n"
                     if plugin_name:
                         plugin_list.append(turn.get('plugin_name'))
-                        suffix += f"{turn.get('plugin_icon')} {turn.get('plugin_name')}"
+                        if turn.get('plugin_icon'):
+                            suffix += f"{turn.get('plugin_icon')} "
+                        suffix += f"{turn.get('plugin_name')}"
                         if turn.get('plugin_input'):
                             suffix += f"：{turn.get('plugin_input')}"
                     if i < len(chain) - 1:
@@ -385,10 +388,34 @@ class LinkAIBot(Bot):
             return
         try:
             for url in image_urls:
-                reply = Reply(ReplyType.IMAGE_URL, url)
+                if url.endswith(".mp4"):
+                    reply_type = ReplyType.VIDEO_URL
+                elif url.endswith(".pdf") or url.endswith(".doc") or url.endswith(".docx"):
+                    reply_type = ReplyType.FILE
+                    url = _download_file(url)
+                    if not url:
+                        continue
+                else:
+                    reply_type = ReplyType.IMAGE_URL
+                reply = Reply(reply_type, url)
                 channel.send(reply, context)
         except Exception as e:
             logger.error(e)
+
+
+def _download_file(url: str):
+    try:
+        file_path = "tmp"
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)
+        file_name = url.split("/")[-1]  # 获取文件名
+        file_path = os.path.join(file_path, file_name)
+        response = requests.get(url)
+        with open(file_path, "wb") as f:
+            f.write(response.content)
+        return file_path
+    except Exception as e:
+        logger.warn(e)
 
 
 class LinkAISessionManager(SessionManager):
