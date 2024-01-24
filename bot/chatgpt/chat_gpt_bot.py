@@ -65,7 +65,7 @@ class ChatGPTBot(Bot, OpenAIImage):
             session = self.sessions.session_query(query, session_id)
             logger.debug("[CHATGPT] session query={}".format(session.messages))
 
-            api_key = context.get("openai_api_key")
+            api_key = context.get("openai_api_key") or openai.api_key
             model = context.get("gpt_model")
             new_args = None
             if model:

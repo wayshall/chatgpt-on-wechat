@@ -3,7 +3,7 @@ import os
 
 from chatgpt_tool_hub.apps import AppFactory
 from chatgpt_tool_hub.apps.app import App
-from chatgpt_tool_hub.tools.all_tool_list import get_all_tool_names
+# from chatgpt_tool_hub.tools.all_tool_list import get_all_tool_names
 
 import plugins
 from bridge.bridge import Bridge
@@ -55,6 +55,7 @@ class Tool(Plugin):
             const.OPEN_AI,
             const.CHATGPTONAZURE,
             const.LINKAI,
+            const.CHATGLM
         ):
             return
 
@@ -156,23 +157,26 @@ class Tool(Plugin):
             "morning_news_use_llm": kwargs.get("morning_news_use_llm", False),
         }
 
-    def _filter_tool_list(self, tool_list: list):
-        valid_list = []
-        for tool in tool_list:
-            if tool in get_all_tool_names():
-                valid_list.append(tool)
-            else:
-                logger.warning("[tool] filter invalid tool: " + repr(tool))
-        return valid_list
+    # def _filter_tool_list(self, tool_list: list):
+    #     valid_list = []
+    #     for tool in tool_list:
+    #         if tool in get_all_tool_names():
+    #             valid_list.append(tool)
+    #         else:
+    #             logger.warning("[tool] filter invalid tool: " + repr(tool))
+    #     return valid_list
 
     def _reset_app(self) -> App:
         tool_config = self._read_json()
         app_kwargs = self._build_tool_kwargs(tool_config.get("kwargs", {}))
 
+        tool_list = tool_config.get("tools", [])
         app = AppFactory()
-        app.init_env(**app_kwargs)
+        app.default_tools_list = tool_list
+        # app.init_env(**app_kwargs)
 
         # filter not support tool
-        tool_list = self._filter_tool_list(tool_config.get("tools", []))
+        # tool_list = self._filter_tool_list(tool_config.get("tools", []))
+
 
         return app.create_app(tools_list=tool_list, **app_kwargs)
