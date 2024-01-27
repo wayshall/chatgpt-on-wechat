@@ -38,6 +38,7 @@ class EventContext:
         self.event = event
         self.econtext = econtext
         self.action = EventAction.CONTINUE
+        self.is_admin_user = False
 
     def __getitem__(self, key):
         return self.econtext[key]

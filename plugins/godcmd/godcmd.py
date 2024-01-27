@@ -216,6 +216,12 @@ class Godcmd(Plugin):
                 e_context.action = EventAction.BREAK_PASS
             return
 
+        user = e_context["context"]["receiver"]
+        isadmin = False
+        if user in self.admin_users:
+            isadmin = True
+            e_context.is_admin_user = isadmin
+
         content = e_context["context"].content
         logger.debug("[Godcmd] on_handle_context. content: %s" % content)
         if content.startswith("#"):
@@ -237,9 +243,9 @@ class Godcmd(Plugin):
             command_parts = content[1:].strip().split()
             cmd = command_parts[0]
             args = command_parts[1:]
-            isadmin = False
-            if user in self.admin_users:
-                isadmin = True
+            # isadmin = False
+            # if user in self.admin_users:
+            #     isadmin = True
             ok = False
             result = "string"
             if any(cmd in info["alias"] for info in COMMANDS.values()):

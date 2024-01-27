@@ -98,11 +98,16 @@ class Role(Plugin):
     def on_handle_context(self, e_context: EventContext):
         if e_context["context"].type != ContextType.TEXT:
             return
+        if not e_context.is_admin_user:
+            return
         btype = Bridge().get_bot_type("chat")
         if btype not in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI, const.CHATGLM]:
             return
         bot = Bridge().get_bot("chat")
         content = e_context["context"].content[:]
+        # 如果content包含了“认真回答”，则不进行扮演
+        if "认真回答" in content:
+            return
         clist = e_context["context"].content.split(maxsplit=1)
         desckey = None
         customize = False
