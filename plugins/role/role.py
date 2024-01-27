@@ -175,12 +175,14 @@ class Role(Plugin):
                     self.roles[role][desckey],
                     self.roles[role].get("wrapper", "%s"),
                 )
-                reply = Reply(ReplyType.INFO, f"预设角色为 {role}:\n" + self.roles[role][desckey])
+                # reply = Reply(ReplyType.INFO, f"预设角色为 {role}:\n" + self.roles[role][desckey])
+                reply = Reply(ReplyType.INFO, f"收到！")
                 e_context["reply"] = reply
                 e_context.action = EventAction.BREAK_PASS
         elif customize == True:
             self.roleplays[sessionid] = RolePlay(bot, sessionid, clist[1], "%s")
-            reply = Reply(ReplyType.INFO, f"角色设定为:\n{clist[1]}")
+            # reply = Reply(ReplyType.INFO, f"角色设定为:\n{clist[1]}")
+            reply = Reply(ReplyType.INFO, f"好的，已收到命令！")
             e_context["reply"] = reply
             e_context.action = EventAction.BREAK_PASS
         else:
