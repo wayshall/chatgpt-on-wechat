@@ -26,6 +26,7 @@ class ChatChannel(Channel):
     sessions = {}  # 用于控制并发，每个session_id同时只能有一个context在处理
     lock = threading.Lock()  # 用于控制对sessions的访问
     handler_pool = ThreadPoolExecutor(max_workers=8)  # 处理消息的线程池
+    is_admin_user = False
 
     def __init__(self):
         _thread = threading.Thread(target=self.consume)

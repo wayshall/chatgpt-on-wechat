@@ -28,6 +28,7 @@ class Context:
         self.type = type
         self.content = content
         self.kwargs = kwargs
+        self.is_admin_user = False
 
     def __contains__(self, key):
         if key == "type":

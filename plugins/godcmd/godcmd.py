@@ -216,11 +216,13 @@ class Godcmd(Plugin):
                 e_context.action = EventAction.BREAK_PASS
             return
 
-        user = e_context["context"]["receiver"]
+        context = e_context["context"]
+        channel = e_context["channel"]
+        user = context["receiver"]
         isadmin = False
         if user in self.admin_users:
             isadmin = True
-            e_context.is_admin_user = isadmin
+            channel.is_admin_user = isadmin
 
         content = e_context["context"].content
         logger.debug("[Godcmd] on_handle_context. content: %s" % content)
