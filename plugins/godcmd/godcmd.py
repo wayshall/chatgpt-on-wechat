@@ -441,8 +441,9 @@ class Godcmd(Plugin):
                 e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
             else:
                 reply.type = ReplyType.ERROR
-                if not isadmin:
-                    e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
+                e_context.action = EventAction.BREAK_PASS
+                # if not isadmin:
+                #     e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
             reply.content = result
             e_context["reply"] = reply
 

@@ -93,17 +93,38 @@ class ChatGLMBot(Bot):
                 logger.debug("[CHATGLM] reply {} used 0 tokens.".format(reply_content))
             return reply
 
-        # elif context.type == ContextType.IMAGE_CREATE:
-        #     ok, retstring = self.create_img(query, 0)
-        #     reply = None
-        #     if ok:
-        #         reply = Reply(ReplyType.IMAGE_URL, retstring)
-        #     else:
-        #         reply = Reply(ReplyType.ERROR, retstring)
-        #     return reply
+        elif context.type == ContextType.IMAGE_CREATE:
+            channel = context["channel"]
+            if not channel.is_admin_user:
+                reply = Reply(ReplyType.TEXT, "你让我画我就画？你以为你是谁？")
+                return reply
+            ok, retstring = self.create_img(query, 0)
+            reply = None
+            if ok:
+                reply = Reply(ReplyType.IMAGE_URL, retstring)
+            else:
+                reply = Reply(ReplyType.ERROR, retstring)
+            return reply
         else:
             reply = Reply(ReplyType.ERROR, "Bot不支持处理{}类型的消息".format(context.type))
             return reply
+
+    def create_img(self, query, retry_count):
+        """
+        create image
+        :param query:
+        :param retry_count:
+        :return:
+        """
+        if retry_count > 3:
+            return False, "重试次数过多"
+        response = self.client.images.generations(
+            model="cogview-3",
+            prompt=query
+        )
+        image_url = response.data[0].url
+        logger.info("[CHATGLM] image url: {}".format(image_url))
+        return True, image_url
 
     def reply_text(self, session: ChatGLMSession, api_key=None, args=None, retry_count=0) -> dict:
         """
