@@ -94,8 +94,7 @@ class ChatGLMBot(Bot):
             return reply
 
         elif context.type == ContextType.IMAGE_CREATE:
-            channel = context["channel"]
-            if not channel.is_admin_user:
+            if not context.is_admin_user:
                 reply = Reply(ReplyType.TEXT, "你让我画我就画？你以为你是谁？")
                 return reply
             ok, retstring = self.create_img(query, 0)

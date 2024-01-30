@@ -210,19 +210,19 @@ class Godcmd(Plugin):
         logger.info("[Godcmd] inited")
 
     def on_handle_context(self, e_context: EventContext):
+        context = e_context["context"]
+        # user = context["receiver"]
+        user = context["msg"].actual_user_id or context["receiver"]
+        isadmin = False
+        if user in self.admin_users:
+            isadmin = True
+            context.is_admin_user = isadmin
+
         context_type = e_context["context"].type
         if context_type != ContextType.TEXT:
             if not self.isrunning:
                 e_context.action = EventAction.BREAK_PASS
             return
-
-        context = e_context["context"]
-        channel = e_context["channel"]
-        user = context["receiver"]
-        isadmin = False
-        if user in self.admin_users:
-            isadmin = True
-            channel.is_admin_user = isadmin
 
         content = e_context["context"].content
         logger.debug("[Godcmd] on_handle_context. content: %s" % content)

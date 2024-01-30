@@ -100,3 +100,6 @@ class WechatMessage(ChatMessage):
             self.actual_user_id = itchat_msg["ActualUserName"]
             if self.ctype not in [ContextType.JOIN_GROUP, ContextType.PATPAT, ContextType.EXIT_GROUP]:
                 self.actual_user_nickname = itchat_msg["ActualNickName"]
+        else:
+            self.is_at = False
+            self.actual_user_id = self.from_user_id
