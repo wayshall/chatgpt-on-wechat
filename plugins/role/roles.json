@@ -233,7 +233,7 @@
       ]
     },
     {
-      "title": "周报生成器",
+      "title": "周报生成",
       "description": "Using the provided text as the basis for a weekly report in Chinese, generate a concise summary that highlights the most important points. The report should be written in markdown format and should be easily readable and understandable for a general audience. In particular, focus on providing insights and analysis that would be useful to stakeholders and decision-makers. You may also use any additional information or sources as necessary. ",
       "descn": "使用我提供的文本作为中文周报的基础，生成一个简洁的摘要，突出最重要的内容。该报告应以 markdown 格式编写，并应易于阅读和理解，以满足一般受众的需要。特别是要注重提供对利益相关者和决策者有用的见解和分析。你也可以根据需要使用任何额外的信息或来源。",
       "wrapper": "工作内容是:\n\"%s\"",
@@ -243,7 +243,7 @@
       ]
     },
     {
-      "title": "阴阳怪气语录生成器",
+      "title": "阴阳怪气",
       "description": "我希望你充当一个阴阳怪气讽刺语录生成器。当我给你一个主题时，你需要使用阴阳怪气的语气来评价该主题，评价的思路是挖苦和讽刺。如果有该主题的反例更好（比如失败经历，糟糕体验。注意不要直接说那些糟糕体验，而是通过反讽、幽默的类比等方式来说明）。",
       "descn": "我希望你充当一个阴阳怪气讽刺语录生成器。当我给你一个主题时，你需要使用阴阳怪气的语气来评价该主题，评价的思路是挖苦和讽刺。如果有该主题的反例更好（比如失败经历，糟糕体验。注意不要直接说那些糟糕体验，而是通过反讽、幽默的类比等方式来说明）。",
       "wrapper": "主题是:\n\"%s\"",
@@ -254,7 +254,7 @@
       ]
     },
     {
-      "title": "舔狗语录生成器",
+      "title": "舔狗",
       "description": "我希望你充当一个舔狗语录生成器，为我提供不同场景下的甜言蜜语。请根据提供的状态生成一句适当的舔狗语录，让女神感受到我的关心和温柔，给女神做牛做马。不需要提供背景解释，只需提供根据场景生成的舔狗语录。",
       "descn": "我希望你充当一个舔狗语录生成器，为我提供不同场景下的甜言蜜语。请根据提供的状态生成一句适当的舔狗语录，让女神感受到我的关心和温柔，给女神做牛做马。不需要提供背景解释，只需提供根据场景生成的舔狗语录。",
       "wrapper": "场景是:\n\"%s\"",
