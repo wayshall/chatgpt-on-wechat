@@ -210,14 +210,6 @@ class Godcmd(Plugin):
         logger.info("[Godcmd] inited")
 
     def on_handle_context(self, e_context: EventContext):
-        context = e_context["context"]
-        # user = context["receiver"]
-        user = context["msg"].actual_user_id or context["receiver"]
-        isadmin = False
-        if user in self.admin_users:
-            isadmin = True
-            context.is_admin_user = isadmin
-
         context_type = e_context["context"].type
         if context_type != ContextType.TEXT:
             if not self.isrunning:
@@ -245,9 +237,9 @@ class Godcmd(Plugin):
             command_parts = content[1:].strip().split()
             cmd = command_parts[0]
             args = command_parts[1:]
-            # isadmin = False
-            # if user in self.admin_users:
-            #     isadmin = True
+            isadmin = False
+            if user in self.admin_users:
+                isadmin = True
             ok = False
             result = "string"
             if any(cmd in info["alias"] for info in COMMANDS.values()):
@@ -321,7 +313,7 @@ class Godcmd(Plugin):
                     except Exception as e:
                         ok, result = False, "你没有设置私有GPT模型"
                 elif cmd == "reset":
-                    if bottype in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI, const.BAIDU, const.XUNFEI, const.QWEN, const.GEMINI]:
+                    if bottype in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI, const.BAIDU, const.XUNFEI, const.QWEN, const.GEMINI, const.ZHIPU_AI]:
                         bot.sessions.clear_session(session_id)
                         if Bridge().chat_bots.get(bottype):
                             Bridge().chat_bots.get(bottype).sessions.clear_session(session_id)
@@ -347,7 +339,7 @@ class Godcmd(Plugin):
                             ok, result = True, "配置已重载"
                         elif cmd == "resetall":
                             if bottype in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI,
-                                           const.BAIDU, const.XUNFEI, const.QWEN, const.GEMINI, const.CHATGLM]:
+                                           const.BAIDU, const.XUNFEI, const.QWEN, const.GEMINI, const.ZHIPU_AI, const.MOONSHOT]:
                                 channel.cancel_all_session()
                                 bot.sessions.clear_all_session()
                                 ok, result = True, "重置所有会话成功"
@@ -438,17 +430,12 @@ class Godcmd(Plugin):
             reply = Reply()
             if ok:
                 reply.type = ReplyType.INFO
-                e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
             else:
                 reply.type = ReplyType.ERROR
-                e_context.action = EventAction.BREAK_PASS
-                # if not isadmin:
-                #     e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
             reply.content = result
             e_context["reply"] = reply
 
-            # 把这段代码移动到ok分支，以让bot可以继续处理聊天指令
-            # e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
+            e_context.action = EventAction.BREAK_PASS  # 事件结束，并跳过处理context的默认逻辑
         elif not self.isrunning:
             e_context.action = EventAction.BREAK_PASS
 
