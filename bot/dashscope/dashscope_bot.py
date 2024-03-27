@@ -28,6 +28,8 @@ class DashscopeBot(Bot):
         self.api_key = conf().get("dashscope_api_key")
         os.environ["DASHSCOPE_API_KEY"] = self.api_key
         self.client = dashscope.Generation
+        dashscope.api_key = self.api_key
+        self.sd_model_name = conf().get("dashscope_sd_model", "stable-diffusion-v1.5")
 
     def reply(self, query, context=None):
         # acquire reply content
@@ -69,6 +71,17 @@ class DashscopeBot(Bot):
                 reply = Reply(ReplyType.ERROR, reply_content["content"])
                 logger.debug("[DASHSCOPE] reply {} used 0 tokens.".format(reply_content))
             return reply
+        elif context.type == ContextType.IMAGE_CREATE:
+            if not context.is_admin_user:
+                reply = Reply(ReplyType.TEXT, "你让我画我就画？你以为你是谁？")
+                return reply
+            ok, retstring = self.create_img(query, 0)
+            reply = None
+            if ok:
+                reply = Reply(ReplyType.IMAGE_URL, retstring)
+            else:
+                reply = Reply(ReplyType.ERROR, retstring)
+            return reply
         else:
             reply = Reply(ReplyType.ERROR, "Bot不支持处理{}类型的消息".format(context.type))
             return reply
@@ -82,7 +95,6 @@ class DashscopeBot(Bot):
         :return: {}
         """
         try:
-            dashscope.api_key = self.api_key
             response = self.client.call(
                 dashscope_models[self.model_name],
                 messages=session.messages,
@@ -115,3 +127,39 @@ class DashscopeBot(Bot):
                 return self.reply_text(session, retry_count + 1)
             else:
                 return result
+
+    def create_img(self, query, retry_count=0):
+        try:
+            messages = [
+                {"role": "system", "content": "你是一个翻译专家，可以帮我把中文翻译成英文，可以适当增加一些润色和修改，但必须保持原文的意思。我只需要你回答翻译后的英文即可，不需要其它额外的内容。"},
+                {"role": "user", "content": query}
+            ]
+            response = self.client.call(
+                dashscope_models[self.model_name],
+                messages=messages,
+                result_format="message"
+            )
+            if response.status_code == HTTPStatus.OK:
+                content = response.output.choices[0]["message"]["content"]
+            else:
+                content = query
+            rsp = dashscope.ImageSynthesis.call(model=self.sd_model_name,
+                                                prompt=content,
+                                                negative_prompt="garfield",
+                                                n=1,
+                                                size='1024*1024')
+            if rsp.status_code == HTTPStatus.OK:
+                print(rsp.output)
+                print(rsp.usage)
+                # save file to current directory
+                image_url = ""
+                for result in rsp.output.results:
+                    image_url = result.url
+                return True, image_url
+            else:
+                logger.error('Failed, status_code: %s, code: %s, message: %s' %
+                      (rsp.status_code, rsp.code, rsp.message))
+                return False, f"画图出现问题:{rsp.code}，请休息一下再问我吧"
+        except Exception as e:
+            logger.exception(e)
+            return False, "画图出现问题，请休息一下再问我吧"
