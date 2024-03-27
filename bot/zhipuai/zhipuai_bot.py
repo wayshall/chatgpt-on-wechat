@@ -78,6 +78,9 @@ class ZHIPUAIBot(Bot, ZhipuAIImage):
                 logger.debug("[ZHIPU_AI] reply {} used 0 tokens.".format(reply_content))
             return reply
         elif context.type == ContextType.IMAGE_CREATE:
+            if not context.is_admin_user:
+                reply = Reply(ReplyType.TEXT, "你让我画我就画？你以为你是谁？")
+                return reply
             ok, retstring = self.create_img(query, 0)
             reply = None
             if ok:

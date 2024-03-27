@@ -9,6 +9,7 @@ CLAUDEAI = "claude"
 QWEN = "qwen"
 GEMINI = "gemini"
 ZHIPU_AI = "glm-4"
+MOONSHOT_AI = "kimi"
 
 
 # model
