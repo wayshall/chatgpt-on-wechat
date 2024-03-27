@@ -101,7 +101,7 @@ class Role(Plugin):
         if not e_context["context"].is_admin_user:
             return
         btype = Bridge().get_bot_type("chat")
-        if btype not in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI, const.ZHIPU_AI]:
+        if btype not in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI, const.ZHIPU_AI, const.QWEN, const.BAIDU]:
             return
         bot = Bridge().get_bot("chat")
         content = e_context["context"].content[:]
