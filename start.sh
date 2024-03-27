@@ -1,3 +1,1 @@
-#/bin/bash
-conda activate chatglm3
-python app.py
+nohup python /root/chatgpt-on-wechat/app.py >/root/chatgpt-on-wechat/chatgpt-on-wechat.log 2>&1 &
