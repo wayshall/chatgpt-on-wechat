@@ -131,8 +131,18 @@ ADMIN_COMMANDS = {
         "alias": ["debug", "调试模式", "DEBUG"],
         "desc": "开启机器调试日志",
     },
+    "voice": {
+        "alias": ["voice", "语音", "语音识别"],
+        "desc": "是否开启语音识别",
+    },
 }
 
+voice_mapping = {
+    "普通话": 1537,
+    "粤语": 1637,
+    "英语": 1737,
+    "四川话": 1837
+}
 
 # 定义帮助函数
 def get_help_text(isadmin, isgroup):
@@ -313,7 +323,7 @@ class Godcmd(Plugin):
                     except Exception as e:
                         ok, result = False, "你没有设置私有GPT模型"
                 elif cmd == "reset":
-                    if bottype in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI, const.BAIDU, const.XUNFEI, const.QWEN, const.GEMINI, const.ZHIPU_AI]:
+                    if bottype in [const.OPEN_AI, const.CHATGPT, const.CHATGPTONAZURE, const.LINKAI, const.BAIDU, const.XUNFEI, const.QWEN, const.GEMINI, const.ZHIPU_AI, const.QWEN_DASHSCOPE, const.MOONSHOT]:
                         bot.sessions.clear_session(session_id)
                         if Bridge().chat_bots.get(bottype):
                             Bridge().chat_bots.get(bottype).sessions.clear_session(session_id)
@@ -418,6 +428,25 @@ class Godcmd(Plugin):
                                 ok, result = False, "请提供插件名"
                             else:
                                 ok, result = PluginManager().update_plugin(args[0])
+                        elif cmd == "voice":
+                            if len(args) == 1:
+                                voice_lang = voice_mapping.get(args[0], None)
+                                if voice_lang:
+                                    conf()["group_speech_recognition"] = True
+                                    conf()["baidu_dev_pid"] = voice_lang
+                                    ok, result = True, f"语音识别已设置为{args[0]}"
+                                elif args[0] == "关闭群语音识别":
+                                    conf()["group_speech_recognition"] = False
+                                    ok, result = True, f"群语音识别已关闭"
+                                elif args[0] == "打开群语音识别":
+                                    conf()["group_speech_recognition"] = True
+                                    ok, result = True, f"群语音识别已开启"
+                                elif args[0] == "关闭语音识别":
+                                    conf()["speech_recognition"] = False
+                                    ok, result = True, f"私聊语音识别已关闭"
+                                elif args[0] == "打开语音识别":
+                                    conf()["speech_recognition"] = True
+                                    ok, result = True, f"私聊语音识别已开启"
                         logger.debug("[Godcmd] admin command: %s by %s" % (cmd, user))
                 else:
                     ok, result = False, "需要管理员权限才能执行该指令"

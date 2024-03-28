@@ -28,6 +28,9 @@ def find_closest_sil_supports(sample_rate):
             mindiff = diff
     return closest
 
+def get_file_content(filePath):
+    with open(filePath, 'rb') as fp:
+        return fp.read()
 
 def get_pcm_from_wav(wav_path):
     """
@@ -64,9 +67,9 @@ def any_to_wav(any_path, wav_path):
     if any_path.endswith(".sil") or any_path.endswith(".silk") or any_path.endswith(".slk"):
         return sil_to_wav(any_path, wav_path)
     audio = AudioSegment.from_file(any_path)
-    audio.set_frame_rate(8000)    # 百度语音转写支持8000采样率, pcm_s16le, 单通道语音识别
+    audio.set_frame_rate(16000)    # 百度语音转写支持8000采样率, pcm_s16le, 单通道语音识别
     audio.set_channels(1)
-    audio.export(wav_path, format="wav", codec='pcm_s16le')
+    audio.export(wav_path, format="wav")
 
 
 def any_to_sil(any_path, sil_path):

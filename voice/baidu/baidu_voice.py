@@ -11,7 +11,7 @@ from bridge.reply import Reply, ReplyType
 from common.log import logger
 from common.tmp_dir import TmpDir
 from config import conf
-from voice.audio_convert import get_pcm_from_wav
+from voice.audio_convert import get_pcm_from_wav, get_file_content
 from voice.voice import Voice
 
 """
@@ -61,8 +61,9 @@ class BaiduVoice(Voice):
     def voiceToText(self, voice_file):
         # 识别本地文件
         logger.debug("[Baidu] voice file name={}".format(voice_file))
-        pcm = get_pcm_from_wav(voice_file)
-        res = self.client.asr(pcm, "pcm", 8000, {"dev_pid": self.dev_id})
+        pcm = get_file_content(voice_file)
+        self.dev_id = conf().get("baidu_dev_pid", 1537)
+        res = self.client.asr(pcm, "wav", 16000, {"dev_pid": self.dev_id})
         if res["err_no"] == 0:
             logger.info("百度语音识别到了：{}".format(res["result"]))
             text = "".join(res["result"])

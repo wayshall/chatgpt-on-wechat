@@ -36,7 +36,8 @@ class PluginManager:
             plugincls.hidden = kwargs.get("hidden") if kwargs.get("hidden") != None else False
             plugincls.enabled = True
             if self.current_plugin_path == None:
-                raise Exception("Plugin path not set")
+                self.current_plugin_path = os.path.join("./plugins", name)
+                # raise Exception("Plugin path not set")
             self.plugins[name.upper()] = plugincls
             logger.info("Plugin %s_v%s registered, path=%s" % (name, plugincls.version, plugincls.path))
 
