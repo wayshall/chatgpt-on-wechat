@@ -27,12 +27,19 @@ class ZHIPUAIBot(Bot, ZhipuAIImage):
         }
         self.client = ZhipuAI(api_key=conf().get("zhipu_ai_api_key"))
 
+    def new_args_from_context(self, context):
+        tools = context.get('tools')
+        new_args = self.args.copy()
+        if tools:
+            new_args["tools"] = tools
+        return new_args
+
     def reply(self, query, context=None):
         # acquire reply content
         if context.type == ContextType.TEXT:
             logger.info("[ZHIPU_AI] query={}".format(query))
 
-            session_id = context["session_id"]
+            session_id = context["session_id"] #  bridge.context.Context
             reply = None
             clear_memory_commands = conf().get("clear_memory_commands", ["#清除记忆"])
             if query in clear_memory_commands:
@@ -51,10 +58,7 @@ class ZHIPUAIBot(Bot, ZhipuAIImage):
 
             api_key = context.get("openai_api_key") or openai.api_key
             model = context.get("gpt_model")
-            new_args = None
-            if model:
-                new_args = self.args.copy()
-                new_args["model"] = model
+            new_args = self.new_args_from_context(context)
             # if context.get('stream'):
             #     # reply in stream
             #     return self.reply_text_stream(query, new_query, session_id)

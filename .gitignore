@@ -30,4 +30,5 @@ plugins/banwords/lib/__pycache__
 !plugins/role
 !plugins/keyword
 !plugins/linkai
+!plugins/grouprole
 client_config.json

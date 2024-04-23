@@ -71,6 +71,8 @@ class Bridge(object):
         return self.btype[typename]
 
     def fetch_reply_content(self, query, context: Context) -> Reply:
+        if "bot" in context:
+            return context["bot"].reply(query, context)
         return self.get_bot("chat").reply(query, context)
 
     def fetch_voice_to_text(self, voiceFile) -> Reply:
