@@ -121,15 +121,17 @@ class Grouprole(Plugin):
         sessionid = e_context["context"]["session_id"]
         content = context.content
         group_name = e_context["context"]["msg"].other_user_nickname
+
+        logger.info("[GroupRole] on_handle_context group: %s" % group_name)
         if group_name not in self.group_roles:
             return
         group_role = self.group_roles[group_name]
-        logger.debug("[GroupRole] on_handle_context. group_name: %s" % group_name)
-        if not group_role.bot:
-            logger.debug("[GroupRole] model not found for group: %s" % group_name)
-            return
+        if group_role.bot:
+            # logger.debug("[GroupRole] model not found for group: %s" % group_name)
+            context["bot"] = group_role.bot
+            bot = group_role.bot
+            # return
 
-        context["bot"] = group_role.bot
         prompt = group_role.action(bot, sessionid, content)
         context.type = ContextType.TEXT
         context.content = prompt
