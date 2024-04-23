@@ -130,6 +130,8 @@ class Grouprole(Plugin):
             # logger.debug("[GroupRole] model not found for group: %s" % group_name)
             context["bot"] = group_role.bot
             bot = group_role.bot
+            # 自定义了bot的基于知识库的问答每次都清除上下文，防止被上下文搞崩。。。
+            # bot.sessions.clear_session(sessionid)
             # return
 
         prompt = group_role.action(bot, sessionid, content)
