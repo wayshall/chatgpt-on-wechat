@@ -95,6 +95,7 @@ class DashscopeBot(Bot):
         :return: {}
         """
         try:
+            dashscope.api_key = self.api_key
             response = self.client.call(
                 dashscope_models[self.model_name],
                 messages=session.messages,
