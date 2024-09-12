@@ -2,12 +2,11 @@ from bot.session_manager import Session
 from common.log import logger
 
 
-class MoonshotSession(Session):
-    def __init__(self, session_id, system_prompt=None, model="moonshot-v1-128k"):
+class BaichuanSession(Session):
+    def __init__(self, session_id, system_prompt=None, model="Baichuan4"):
         super().__init__(session_id, system_prompt)
         self.model = model
         self.reset()
-        self.files_loaded = False
 
     def discard_exceeding(self, max_tokens, cur_tokens=None):
         precise = True

@@ -38,7 +38,7 @@ class Bridge(object):
                 self.btype["chat"] = const.QWEN_DASHSCOPE
             if model_type in [const.GEMINI]:
                 self.btype["chat"] = const.GEMINI
-            if model_type in [const.ZHIPU_AI]:
+            if model_type in const.ZHIPU_AI_MODELS:
                 self.btype["chat"] = const.ZHIPU_AI
             if model_type and model_type.startswith("claude-3"):
                 self.btype["chat"] = const.CLAUDEAPI
@@ -51,6 +51,9 @@ class Bridge(object):
 
             if model_type in ["abab6.5-chat"]:
                 self.btype["chat"] = const.MiniMax
+
+            if model_type in const.BAICHUAN_MODELS:
+                self.btype["chat"] = const.BAICHUAN
 
             if conf().get("use_linkai") and conf().get("linkai_api_key"):
                 self.btype["chat"] = const.LINKAI

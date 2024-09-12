@@ -12,9 +12,11 @@ QWEN = "qwen"
 QWEN_DASHSCOPE = "dashscope"
 
 GEMINI = "gemini"
-ZHIPU_AI = "glm-4"
+ZHIPU_AI = "zhpuai"
 MOONSHOT = "moonshot"
+MOONSHOT_OPENAI = "moonshot_openai"
 MiniMax = "minimax"
+BAICHUAN = "baichuan"
 
 
 # model
@@ -57,6 +59,14 @@ GEMINI_PRO = "gemini-1.0-pro"
 GEMINI_15_flash = "gemini-1.5-flash"
 GEMINI_15_PRO = "gemini-1.5-pro"
 
+ZHIPU_AI_MODELS = [
+    "GLM-4-Plus", "GLM-4-0520", "GLM-4-Long", "GLM-4-AirX", "GLM-4-Air", "GLM-4-Flash", "GLM-4V", "GLM-4-AllTools", "GLM-4"
+]
+
+BAICHUAN_MODELS = [
+    "Baichuan4", "Baichuan3-Turbo", "Baichuan3-Turbo-128k"
+]
+
 MODEL_LIST = [
               GPT35, GPT35_0125, GPT35_1106, "gpt-3.5-turbo-16k",
               GPT_4o, GPT_4O_0806, GPT_4o_MINI, GPT4_TURBO, GPT4_TURBO_PREVIEW, GPT4_TURBO_01_25, GPT4_TURBO_11_06, GPT4, GPT4_32k, GPT4_06_13, GPT4_32k_06_13,
@@ -68,6 +78,7 @@ MODEL_LIST = [
               QWEN, QWEN_TURBO, QWEN_PLUS, QWEN_MAX,
               LINKAI_35, LINKAI_4_TURBO, LINKAI_4o
             ]
+MODEL_LIST.extend(ZHIPU_AI_MODELS)
 
 # channel
 FEISHU = "feishu"

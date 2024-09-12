@@ -172,6 +172,9 @@ available_setting = {
     "zhipu_ai_api_base": "https://open.bigmodel.cn/api/paas/v4",
     "moonshot_api_key": "",
     "moonshot_base_url": "https://api.moonshot.cn/v1/chat/completions",
+    # 百川
+    "baichuan_api_key": "",
+    "baichuan_base_url": "https://api.baichuan-ai.com/v1",
     # LinkAI平台配置
     "use_linkai": False,
     "linkai_api_key": "",

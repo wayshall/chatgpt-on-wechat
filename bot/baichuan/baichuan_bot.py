@@ -9,27 +9,34 @@ from bridge.context import ContextType
 from bridge.reply import Reply, ReplyType
 from common.log import logger
 from config import conf, load_config
-from .moonshot_session import MoonshotSession
+from .baichuan_session import BaichuanSession
 import requests
+import json
+from openai import OpenAI
 
 
-# ZhipuAI对话模型API
-class MoonshotBot(Bot):
+# baichuan 对话模型API
+class BaichuanBot(Bot):
     def __init__(self):
         super().__init__()
-        self.sessions = SessionManager(MoonshotSession, model=conf().get("model") or "moonshot-v1-128k")
+        self.model = conf().get("model") or "Baichuan4"
+        self.sessions = SessionManager(BaichuanSession, model=self.model)
         self.args = {
-            "model": conf().get("model") or "moonshot-v1-128k",  # 对话模型的名称
-            "temperature": conf().get("temperature", 0.3),  # 如果设置，值域须为 [0, 1] 我们推荐 0.3，以达到较合适的效果。
-            "top_p": conf().get("top_p", 1.0),  # 使用默认值
+            "model": self.model,  # 对话模型的名称
+            "temperature": 0.3,  # 如果设置，值域须为 [0, 1] 我们推荐 0.3，以达到较合适的效果。
+            "top_p": conf().get("top_p", 0.85),  # 使用默认值
         }
-        self.api_key = conf().get("moonshot_api_key")
-        self.base_url = conf().get("moonshot_base_url", "https://api.moonshot.cn/v1/chat/completions")
+        self.api_key = conf().get("baichuan_api_key")
+        self.base_url = conf().get("baichuan_base_url", "https://api.baichuan-ai.com/v1")
+        self.client = OpenAI(
+            api_key=self.api_key,
+            base_url=self.base_url,
+        )
 
     def reply(self, query, context=None):
         # acquire reply content
         if context.type == ContextType.TEXT:
-            logger.info("[MOONSHOT_AI] query={}".format(query))
+            logger.info("[BAICHUAN_AI] query={}".format(query))
 
             session_id = context["session_id"]
             reply = None
@@ -46,19 +53,13 @@ class MoonshotBot(Bot):
             if reply:
                 return reply
             session = self.sessions.session_query(query, session_id)
-            logger.debug("[MOONSHOT_AI] session query={}".format(session.messages))
+            logger.debug("[BAICHUAN_AI] session query={}".format(session.messages))
 
-            model = context.get("moonshot_model")
-            new_args = self.args.copy()
-            if model:
-                new_args["model"] = model
-            # if context.get('stream'):
-            #     # reply in stream
-            #     return self.reply_text_stream(query, new_query, session_id)
+            new_args = self.new_args_from_context(context)
 
             reply_content = self.reply_text(session, args=new_args)
             logger.debug(
-                "[MOONSHOT_AI] new_query={}, session_id={}, reply_cont={}, completion_tokens={}".format(
+                "[BAICHUAN_AI] new_query={}, session_id={}, reply_cont={}, completion_tokens={}".format(
                     session.messages,
                     session_id,
                     reply_content["content"],
@@ -72,13 +73,13 @@ class MoonshotBot(Bot):
                 reply = Reply(ReplyType.TEXT, reply_content["content"])
             else:
                 reply = Reply(ReplyType.ERROR, reply_content["content"])
-                logger.debug("[MOONSHOT_AI] reply {} used 0 tokens.".format(reply_content))
+                logger.debug("[BAICHUAN_AI] reply {} used 0 tokens.".format(reply_content))
             return reply
         else:
             reply = Reply(ReplyType.ERROR, "Bot不支持处理{}类型的消息".format(context.type))
             return reply
 
-    def reply_text(self, session: MoonshotSession, args=None, retry_count=0) -> dict:
+    def reply_text(self, session: BaichuanSession, args=None, retry_count=0) -> dict:
         """
         call openai's ChatCompletion to get the answer
         :param session: a conversation session
@@ -93,10 +94,11 @@ class MoonshotBot(Bot):
             }
             body = args
             body["messages"] = session.messages
-            # logger.debug("[MOONSHOT_AI] response={}".format(response))
-            # logger.info("[MOONSHOT_AI] reply={}, total_tokens={}".format(response.choices[0]['message']['content'], response["usage"]["total_tokens"]))
+            # json_data = json.dumps(body, ensure_ascii=False)
+            # logger.debug("[BAICHUAN_AI] json_data={}".format(json_data))
+            # logger.info("[BAICHUAN_AI] reply={}, total_tokens={}".format(response.choices[0]['message']['content'], response["usage"]["total_tokens"]))
             res = requests.post(
-                self.base_url,
+                self.base_url + "/chat/completions",
                 headers=headers,
                 json=body
             )
@@ -110,14 +112,14 @@ class MoonshotBot(Bot):
             else:
                 response = res.json()
                 error = response.get("error")
-                logger.error(f"[MOONSHOT_AI] chat failed, status_code={res.status_code}, "
+                logger.error(f"[BAICHUAN_AI] chat failed, status_code={res.status_code}, "
                              f"msg={error.get('message')}, type={error.get('type')}")
 
                 result = {"completion_tokens": 0, "content": "提问太快啦，请休息一下再问我吧"}
                 need_retry = False
                 if res.status_code >= 500:
                     # server error, need retry
-                    logger.warn(f"[MOONSHOT_AI] do retry, times={retry_count}")
+                    logger.warn(f"[BAICHUAN_AI] do retry, times={retry_count}")
                     need_retry = retry_count < 2
                 elif res.status_code == 401:
                     result["content"] = "授权失败，请检查API Key是否正确"
@@ -140,3 +142,12 @@ class MoonshotBot(Bot):
                 return self.reply_text(session, args, retry_count + 1)
             else:
                 return result
+
+    def new_args_from_context(self, context):
+        tools = context.get('tools')
+        new_args = self.args.copy()
+        if "model" not in new_args:
+            new_args["model"] = self.model
+        if tools:
+            new_args["tools"] = tools
+        return new_args

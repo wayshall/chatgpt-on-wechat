@@ -63,6 +63,14 @@ def create_bot(bot_type):
     elif bot_type == const.MOONSHOT:
         from bot.moonshot.moonshot_bot import MoonshotBot
         return MoonshotBot()
+
+    elif bot_type == const.MOONSHOT_OPENAI:
+        from bot.moonshot.moonshot_openai_bot import MoonshotOpenAIBot
+        return MoonshotOpenAIBot()
+
+    elif bot_type == const.BAICHUAN:
+        from bot.baichuan.baichuan_bot import BaichuanBot
+        return BaichuanBot()
     
     elif bot_type == const.MiniMax:
         from bot.minimax.minimax_bot import MinimaxBot

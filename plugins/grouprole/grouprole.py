@@ -16,6 +16,7 @@ class GroupRolePlay:
     def __init__(self, role):
         self.role_desc = role["role_desc"]
         self.group_name = role["group_name"]
+        self.bot_type = None
         if "tools" in role:
             self.tools = role["tools"]
         else:
@@ -24,13 +25,21 @@ class GroupRolePlay:
             self.wrapper = role["wrapper"]
         else:
             self.wrapper = None
+        if "bot_type" in role:
+            self.bot_type = role["bot_type"]
+            self.bot = create_bot(self.bot_type)
         if "model" in role:
             self.model = role["model"]
-            bot_type = GroupRolePlay.get_bot_type(self.model)
-            self.bot = create_bot(bot_type)
+            if not self.bot_type:
+                self.bot_type = GroupRolePlay.get_bot_type(self.model)
+                self.bot = create_bot(self.bot_type)
             self.bot.args["model"] = self.model
         else:
             self.bot = None
+        if "file_dir" in role:
+            self.file_dir = role["file_dir"]
+        else:
+            self.file_dir = None
 
     def reset(self, bot, sessionid):
         bot.sessions.clear_session(sessionid)
@@ -62,7 +71,7 @@ class GroupRolePlay:
             bot_type = const.QWEN_DASHSCOPE
         if model_type in [const.GEMINI]:
             bot_type = const.GEMINI
-        if model_type in [const.ZHIPU_AI]:
+        if model_type in const.ZHIPU_AI_MODELS:
             bot_type = const.ZHIPU_AI
         if model_type and model_type.startswith("claude-3"):
             bot_type = const.CLAUDEAPI
@@ -140,6 +149,8 @@ class Grouprole(Plugin):
 
         if group_role.tools:
             context["tools"] = group_role.tools
+        if group_role.file_dir:
+            context["file_dir"] = group_role.file_dir
 
         e_context.action = EventAction.BREAK # 事件结束，进入默认处理逻辑，一般会覆写reply
 
