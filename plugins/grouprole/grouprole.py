@@ -79,6 +79,8 @@ class GroupRolePlay:
             bot_type = const.CLAUDEAI
         if model_type in ["moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"]:
             bot_type = const.MOONSHOT
+        if model_type in const.BAICHUAN_MODELS:
+            bot_type = const.BAICHUAN
 
         if not bot_type:
             raise Exception("model_type is not supported: %s" % model_type)
