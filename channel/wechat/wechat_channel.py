@@ -20,7 +20,7 @@ from common.expired_dict import ExpiredDict
 from common.log import logger
 from common.singleton import singleton
 from common.time_check import time_checker
-from common.utils import convert_webp_to_png
+from common.utils import convert_webp_to_png, remove_markdown_symbol
 from config import conf, get_appdata_dir
 from lib import itchat
 from lib.itchat.content import *
@@ -100,7 +100,10 @@ def qrCallback(uuid, status, qrcode):
         qr = qrcode.QRCode(border=1)
         qr.add_data(url)
         qr.make(fit=True)
-        qr.print_ascii(invert=True)
+        try:
+            qr.print_ascii(invert=True)
+        except UnicodeEncodeError:
+            print("ASCII QR code printing failed due to encoding issues.")
 
 
 @singleton
@@ -114,23 +117,33 @@ class WechatChannel(ChatChannel):
 
     def startup(self):
         try:
-            itchat.instance.receivingRetryCount = 600  # 修改断线超时时间
-            # login by scan QRCode
-            hotReload = conf().get("hot_reload", False)
-            status_path = os.path.join(get_appdata_dir(), "itchat.pkl")
-            itchat.auto_login(
-                enableCmdQR=2,
-                hotReload=hotReload,
-                statusStorageDir=status_path,
-                qrCallback=qrCallback,
-                exitCallback=self.exitCallback,
-                loginCallback=self.loginCallback
-            )
-            self.user_id = itchat.instance.storageClass.userName
-            self.name = itchat.instance.storageClass.nickName
-            logger.info("Wechat login success, user_id: {}, nickname: {}".format(self.user_id, self.name))
-            # start message listener
-            itchat.run()
+            time.sleep(3)
+            logger.error("""[WechatChannel] 当前channel暂不可用，目前支持的channel有:
+                1. terminal: 终端
+                2. wechatmp: 个人公众号
+                3. wechatmp_service: 企业公众号
+                4. wechatcom_app: 企微自建应用
+                5. dingtalk: 钉钉
+                6. feishu: 飞书
+                7. web: 网页
+            可修改 config.json 配置文件的 channel_type 字段进行切换""")
+            # itchat.instance.receivingRetryCount = 600  # 修改断线超时时间
+            # # login by scan QRCode
+            # hotReload = conf().get("hot_reload", False)
+            # status_path = os.path.join(get_appdata_dir(), "itchat.pkl")
+            # itchat.auto_login(
+            #     enableCmdQR=2,
+            #     hotReload=hotReload,
+            #     statusStorageDir=status_path,
+            #     qrCallback=qrCallback,
+            #     exitCallback=self.exitCallback,
+            #     loginCallback=self.loginCallback
+            # )
+            # self.user_id = itchat.instance.storageClass.userName
+            # self.name = itchat.instance.storageClass.nickName
+            # logger.info("Wechat login success, user_id: {}, nickname: {}".format(self.user_id, self.name))
+            # # start message listener
+            # itchat.run()
         except Exception as e:
             logger.exception(e)
 
@@ -210,9 +223,11 @@ class WechatChannel(ChatChannel):
     def send(self, reply: Reply, context: Context):
         receiver = context["receiver"]
         if reply.type == ReplyType.TEXT:
+            reply.content = remove_markdown_symbol(reply.content)
             itchat.send(reply.content, toUserName=receiver)
             logger.info("[WX] sendMsg={}, receiver={}".format(reply, receiver))
         elif reply.type == ReplyType.ERROR or reply.type == ReplyType.INFO:
+            reply.content = remove_markdown_symbol(reply.content)
             itchat.send(reply.content, toUserName=receiver)
             logger.info("[WX] sendMsg={}, receiver={}".format(reply, receiver))
         elif reply.type == ReplyType.VOICE:

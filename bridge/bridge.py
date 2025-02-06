@@ -36,9 +36,9 @@ class Bridge(object):
                 self.btype["chat"] = const.QWEN
             if model_type in [const.QWEN_TURBO, const.QWEN_PLUS, const.QWEN_MAX]:
                 self.btype["chat"] = const.QWEN_DASHSCOPE
-            if model_type in [const.GEMINI]:
+            if model_type and model_type.startswith("gemini"):
                 self.btype["chat"] = const.GEMINI
-            if model_type in const.ZHIPU_AI_MODELS:
+            if model_type and model_type.startswith("glm"):
                 self.btype["chat"] = const.ZHIPU_AI
             if model_type and model_type.startswith("claude-3"):
                 self.btype["chat"] = const.CLAUDEAPI
@@ -46,14 +46,11 @@ class Bridge(object):
             if model_type in ["claude"]:
                 self.btype["chat"] = const.CLAUDEAI
 
-            if model_type in ["moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"]:
+            if model_type in [const.MOONSHOT, "moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"]:
                 self.btype["chat"] = const.MOONSHOT
 
             if model_type in ["abab6.5-chat"]:
                 self.btype["chat"] = const.MiniMax
-
-            if model_type in const.BAICHUAN_MODELS:
-                self.btype["chat"] = const.BAICHUAN
 
             if conf().get("use_linkai") and conf().get("linkai_api_key"):
                 self.btype["chat"] = const.LINKAI
@@ -83,8 +80,6 @@ class Bridge(object):
         return self.btype[typename]
 
     def fetch_reply_content(self, query, context: Context) -> Reply:
-        if "bot" in context:
-            return context["bot"].reply(query, context)
         return self.get_bot("chat").reply(query, context)
 
     def fetch_voice_to_text(self, voiceFile) -> Reply:

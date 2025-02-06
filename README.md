@@ -1,11 +1,19 @@
-# 简介
+<p align="center"><img src= "https://github.com/user-attachments/assets/31fb4eab-3be4-477d-aa76-82cf62bfd12c" alt="Chatgpt-on-Wechat" width="600" /></p>
 
-> chatgpt-on-wechat（简称CoW）项目是基于大模型的智能对话机器人，支持微信公众号、企业微信应用、飞书、钉钉接入，可选择GPT3.5/GPT4.0/Claude/Gemini/LinkAI/ChatGLM/KIMI/文心一言/讯飞星火/通义千问/LinkAI，能处理文本、语音和图片，通过插件访问操作系统和互联网等外部资源，支持基于自有知识库定制企业AI应用。
+<p align="center">
+   <a href="https://github.com/zhayujie/chatgpt-on-wechat/releases/latest"><img src="https://img.shields.io/github/v/release/zhayujie/chatgpt-on-wechat" alt="Latest release"></a>
+  <a href="https://github.com/zhayujie/chatgpt-on-wechat/blob/master/LICENSE"><img src="https://img.shields.io/github/license/zhayujie/chatgpt-on-wechat" alt="License: MIT"></a>
+  <a href="https://github.com/zhayujie/chatgpt-on-wechat"><img src="https://img.shields.io/github/stars/zhayujie/chatgpt-on-wechat?style=flat-square" alt="Stars"></a> <br/>
+</p>
+
+chatgpt-on-wechat（简称CoW）项目是基于大模型的智能对话机器人，支持微信公众号、企业微信应用、飞书、钉钉接入，可选择GPT3.5/GPT4.0/Claude/Gemini/LinkAI/ChatGLM/KIMI/文心一言/讯飞星火/通义千问/LinkAI，能处理文本、语音和图片，通过插件访问操作系统和互联网等外部资源，支持基于自有知识库定制企业AI应用。
+
+# 简介
 
 最新版本支持的功能如下：
 
 -  ✅   **多端部署：** 有多种部署方式可选择且功能完备，目前已支持微信公众号、企业微信应用、飞书、钉钉等部署方式
--  ✅   **基础对话：** 私聊及群聊的消息智能回复，支持多轮会话上下文记忆，支持 GPT-3.5, GPT-4o-mini, GPT-4o,  GPT-4, Claude-3.5, Gemini, 文心一言, 讯飞星火, 通义千问，ChatGLM-4，Kimi(月之暗面), MiniMax
+-  ✅   **基础对话：** 私聊及群聊的消息智能回复，支持多轮会话上下文记忆，支持 GPT-3.5, GPT-4o-mini, GPT-4o,  GPT-4, Claude-3.5, Gemini, 文心一言, 讯飞星火, 通义千问，ChatGLM-4，Kimi(月之暗面), MiniMax, GiteeAI
 -  ✅   **语音能力：** 可识别语音消息，通过文字或语音回复，支持 azure, baidu, google, openai(whisper/tts) 等多种语音模型
 -  ✅   **图像能力：** 支持图片生成、图片识别、图生图（如照片修复），可选择 Dall-E-3, stable diffusion, replicate, midjourney, CogView-3, vision模型
 -  ✅   **丰富插件：** 支持个性化插件扩展，已实现多角色切换、文字冒险、敏感词过滤、聊天记录总结、文档总结和对话、联网搜索等插件
@@ -40,13 +48,16 @@ DEMO视频：https://cdn.link-ai.tech/doc/cow_demo.mp4
 
 **企业服务和产品咨询** 可联系产品顾问：
 
-<img width="160" src="https://img-1317903499.cos.ap-guangzhou.myqcloud.com/docs/github-product-consult.png">
+<img width="160" src="https://cdn.link-ai.tech/consultant-s.jpg">
 
 <br>
 
 # 🏷 更新日志
+>**2024.10.31：** [1.7.3版本](https://github.com/zhayujie/chatgpt-on-wechat/releases/tag/1.7.3) 程序稳定性提升、数据库功能、Claude模型优化、linkai插件优化、离线通知
 
->**2024.08.02：** [1.7.0版本](https://github.com/zhayujie/chatgpt-on-wechat/releases/tag/1.6.9) 新增 讯飞4.0 模型、知识库引用来源展示、相关插件优化
+>**2024.09.26：** [1.7.2版本](https://github.com/zhayujie/chatgpt-on-wechat/releases/tag/1.7.2)  和 [1.7.1版本](https://github.com/zhayujie/chatgpt-on-wechat/releases/tag/1.7.1) 文心，讯飞等模型优化、o1 模型、快速安装和管理脚本
+
+>**2024.08.02：** [1.7.0版本](https://github.com/zhayujie/chatgpt-on-wechat/releases/tag/1.7.0) 新增 讯飞4.0 模型、知识库引用来源展示、相关插件优化
 
 >**2024.07.19：** [1.6.9版本](https://github.com/zhayujie/chatgpt-on-wechat/releases/tag/1.6.9) 新增 gpt-4o-mini 模型、阿里语音识别、企微应用渠道路由优化
 
@@ -80,8 +91,13 @@ DEMO视频：https://cdn.link-ai.tech/doc/cow_demo.mp4
 
 # 🚀 快速开始
 
-快速开始详细文档：[项目搭建文档](https://docs.link-ai.tech/cow/quick-start)
+- 快速开始详细文档：[项目搭建文档](https://docs.link-ai.tech/cow/quick-start)
 
+- 快速安装脚本，详细使用指导：[一键安装启动脚本](https://github.com/zhayujie/chatgpt-on-wechat/wiki/%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC)
+```bash
+bash <(curl -sS https://cdn.link-ai.tech/code/cow/install.sh)
+```
+- 项目管理脚本，详细使用指导：[项目管理脚本](https://github.com/zhayujie/chatgpt-on-wechat/wiki/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E8%84%9A%E6%9C%AC)
 ## 一、准备
 
 ### 1. 账号注册
@@ -136,6 +152,7 @@ pip3 install -r requirements-optional.txt
 {
   "model": "gpt-3.5-turbo",                                   # 模型名称, 支持 gpt-3.5-turbo, gpt-4, gpt-4-turbo, wenxin, xunfei, glm-4, claude-3-haiku, moonshot
   "open_ai_api_key": "YOUR API KEY",                          # 如果使用openAI模型则填入上面创建的 OpenAI API KEY
+  "open_ai_api_base": "https://api.openai.com/v1",            # OpenAI接口代理地址
   "proxy": "",                                                # 代理客户端的ip和端口，国内环境开启代理的需要填写该项，如 "127.0.0.1:7890"
   "single_chat_prefix": ["bot", "@bot"],                      # 私聊时文本需要包含该前缀才能触发机器人回复
   "single_chat_reply_prefix": "[bot] ",                       # 私聊时自动回复的前缀，用于区分真人
@@ -267,7 +284,7 @@ sudo docker logs -f chatgpt-on-wechat
 volumes:
   - ./config.json:/app/plugins/config.json
 ```
-
+**注**：采用docker方式部署的详细教程可以参考：[docker部署CoW项目](https://www.wangpc.cc/ai/docker-deploy-cow/)
 ### 4. Railway部署
 
 > Railway 每月提供5刀和最多500小时的免费额度。 (07.11更新: 目前大部分账号已无法免费部署)

@@ -57,7 +57,7 @@ class ChatGPTSession(Session):
 def num_tokens_from_messages(messages, model):
     """Returns the number of tokens used by a list of messages."""
 
-    if model in ["wenxin", "xunfei", const.GEMINI]:
+    if model in ["wenxin", "xunfei"] or model.startswith(const.GEMINI):
         return num_tokens_by_character(messages)
 
     import tiktoken
@@ -83,7 +83,7 @@ def num_tokens_from_messages(messages, model):
         tokens_per_message = 3
         tokens_per_name = 1
     else:
-        logger.warn(f"num_tokens_from_messages() is not implemented for model {model}. Returning num tokens assuming gpt-3.5-turbo.")
+        logger.debug(f"num_tokens_from_messages() is not implemented for model {model}. Returning num tokens assuming gpt-3.5-turbo.")
         return num_tokens_from_messages(messages, model="gpt-3.5-turbo")
     num_tokens = 0
     for message in messages:
