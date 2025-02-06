@@ -100,6 +100,10 @@ class Grouprole(Plugin):
         super().__init__()
         self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
         logger.info("[GroupRole] inited")
+        self._load_config()
+        self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
+
+    def _load_config(self):
         self.config = super().load_config()
         current_dir = os.path.dirname(__file__)
         config_path = os.path.join(current_dir, "grouproles.json")
@@ -118,7 +122,6 @@ class Grouprole(Plugin):
             else:
                 logger.error("[GroupRole] init failed", e)
             raise e
-        self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
 
     def on_handle_context(self, e_context: EventContext):
         if e_context["context"].type not in [
